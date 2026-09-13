@@ -3,8 +3,17 @@ package com.grupo7.ac1final.Domain;
 public class Aluno {
 
     private int cursosAdicionaisPermitidos = 0;
+    private int cursosConcluidos = 0;
+    private String plano = "BASICO";
+    private boolean possuiVoucher = false;
 
     public void concluirCurso() {
+        cursosConcluidos++;
+
+        if (cursosConcluidos >= 12) {
+            plano = "PREMIUM";
+            possuiVoucher = true;
+        }
     }
 
     public String getPlano() {

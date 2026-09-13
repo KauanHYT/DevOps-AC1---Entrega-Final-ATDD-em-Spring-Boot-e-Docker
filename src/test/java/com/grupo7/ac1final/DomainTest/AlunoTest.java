@@ -30,4 +30,14 @@ public class AlunoTest {
 
         assertTrue(aluno.isPossuiVoucher());
     }
+
+    @Test
+    void deveGanharDireitoAMaisTresCursosQuandoAlunoConcluirCursoComMediaMaiorOuIgualA7(){
+        Aluno aluno = new Aluno();
+        double mediaAluno = 7.0;
+
+        aluno.concluirCurso(mediaAluno);
+
+        assertEquals(3, aluno.getCursosAdicionaisPermitidos());
+    }
 }

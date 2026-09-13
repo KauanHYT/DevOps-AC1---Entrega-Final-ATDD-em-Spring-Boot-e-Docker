@@ -12,4 +12,11 @@ public class Aluno {
     public boolean isPossuiVoucher() {
         return false;
     }
+
+    public void concluirCurso(double mediaAluno) {
+    }
+
+    public int getCursosAdicionaisPermitidos() {
+        return 0;
+    }
 }

@@ -1,0 +1,15 @@
+package com.grupo7.ac1final.Domain;
+
+public class Aluno {
+
+    public void concluirCurso() {
+    }
+
+    public String getPlano() {
+        return "BASICO";
+    }
+
+    public boolean isPossuiVoucher() {
+        return false;
+    }
+}

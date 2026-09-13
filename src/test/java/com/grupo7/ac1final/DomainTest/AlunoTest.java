@@ -40,4 +40,16 @@ public class AlunoTest {
 
         assertEquals(3, aluno.getCursosAdicionaisPermitidos());
     }
+
+    @Test
+    void deveLiberarTresCursosExtrasParaAlunoDoPlanoBasicoComMediaMaiorOuIgualA7() {
+        Aluno aluno = new Aluno();
+        double mediaAluno = 7.0;
+
+        assertEquals("BASICO", aluno.getPlano());
+
+        aluno.concluirCurso(mediaAluno);
+
+        assertEquals(3, aluno.getCursosAdicionaisPermitidos());
+    }
 }

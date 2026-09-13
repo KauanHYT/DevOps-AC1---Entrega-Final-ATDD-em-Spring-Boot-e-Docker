@@ -19,4 +19,11 @@ public class Aluno {
     public int getCursosAdicionaisPermitidos() {
         return 0;
     }
+
+    public void identificarMudancaDePlano() {
+    }
+
+    public boolean isNotificadoMelhoriaPlano() {
+        return false;
+    }
 }

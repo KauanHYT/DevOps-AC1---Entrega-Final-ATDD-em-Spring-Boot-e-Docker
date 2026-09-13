@@ -52,4 +52,17 @@ public class AlunoTest {
 
         assertEquals(3, aluno.getCursosAdicionaisPermitidos());
     }
+
+    @Test
+    void deveReceberNotificacaoDeMelhoriaDePlanoQuandoAplicacaoIdentificarMudancaParaPremium() {
+
+        Aluno aluno = new Aluno();
+        for (int i = 0; i < 12; i++) {
+            aluno.concluirCurso();
+        }
+
+        aluno.identificarMudancaDePlano();
+
+        assertTrue(aluno.isNotificadoMelhoriaPlano());
+    }
 }

@@ -18,11 +18,11 @@ public class Aluno {
     }
 
     public String getPlano() {
-        return "BASICO";
+        return plano;
     }
 
     public boolean isPossuiVoucher() {
-        return false;
+        return possuiVoucher;
     }
 
     public void concluirCurso(double mediaAluno) {

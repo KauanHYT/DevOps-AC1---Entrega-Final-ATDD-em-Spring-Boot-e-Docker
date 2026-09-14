@@ -6,6 +6,7 @@ public class Aluno {
     private int cursosConcluidos = 0;
     private String plano = "BASICO";
     private boolean possuiVoucher = false;
+    private boolean notificadoMelhoriaPlano = false;
 
     public void concluirCurso() {
         cursosConcluidos++;
@@ -36,9 +37,12 @@ public class Aluno {
     }
 
     public void identificarMudancaDePlano() {
+        if ("PREMIUM".equals(plano)) {
+            notificadoMelhoriaPlano = true;
+        }
     }
 
     public boolean isNotificadoMelhoriaPlano() {
-        return false;
+        return notificadoMelhoriaPlano;
     }
 }

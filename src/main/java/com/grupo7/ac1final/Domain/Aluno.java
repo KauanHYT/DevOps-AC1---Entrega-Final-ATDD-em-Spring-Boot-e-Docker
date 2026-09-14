@@ -27,9 +27,10 @@ public class Aluno {
 
     public void concluirCurso(double mediaAluno) {
 
-        if (mediaAluno >= 7.0) {
+        if (mediaAluno >= 7.0)
             this.cursosAdicionaisPermitidos = 3;
-        }
+        else
+            this.cursosAdicionaisPermitidos = 0;
     }
 
     public int getCursosAdicionaisPermitidos() {

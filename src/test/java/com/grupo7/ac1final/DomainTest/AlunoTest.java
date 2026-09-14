@@ -75,4 +75,14 @@ public class AlunoTest {
 
         assertTrue(aluno.isNotificadoMelhoriaPlano());
     }
+
+    @Test
+    void NAOdeveReceberNotificacaoDeMelhoriaDePlanoQuandoAlunoNaoForPremium() {
+
+        Aluno aluno = new Aluno();
+
+        aluno.identificarMudancaDePlano();
+
+        assertFalse(aluno.isNotificadoMelhoriaPlano());
+    }
 }

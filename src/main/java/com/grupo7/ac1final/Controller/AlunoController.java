@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/alunos")
 public class AlunoController {
 
@@ -63,6 +64,50 @@ public class AlunoController {
         alunoService.deletar(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/concluir-curso")
+    public ResponseEntity<AlunoDTO> concluirCurso(@PathVariable Long id) {
+        return alunoService.buscarPorId(id)
+                .map(aluno -> {
+                    int cursos = aluno.getCursosConcluidos() + 1;
+                    aluno.setCursosConcluidos(cursos);
+
+                    if (cursos >= 12) {
+                        aluno.setPlano("PREMIUM");
+                        aluno.setPossuiVoucher(true);
+                    }
+
+                    AlunoEntity salvo = alunoService.salvar(aluno);
+                    return ResponseEntity.ok(converterParaDTO(salvo));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/liberar-cursos")
+    public ResponseEntity<AlunoDTO> liberarCursos(@PathVariable Long id) {
+        return alunoService.buscarPorId(id)
+                .map(aluno -> {
+                    aluno.setCursosAdicionaisPermitidos(3);
+
+                    AlunoEntity salvo = alunoService.salvar(aluno);
+                    return ResponseEntity.ok(converterParaDTO(salvo));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/notificar")
+    public ResponseEntity<AlunoDTO> notificarMudancaPlano(@PathVariable Long id) {
+        return alunoService.buscarPorId(id)
+                .map(aluno -> {
+                    if ("PREMIUM".equals(aluno.getPlano())) {
+                        aluno.setNotificadoMelhoriaPlano(true);
+                    }
+
+                    AlunoEntity salvo = alunoService.salvar(aluno);
+                    return ResponseEntity.ok(converterParaDTO(salvo));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private AlunoDTO converterParaDTO(AlunoEntity aluno) {

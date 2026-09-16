@@ -4,7 +4,7 @@
 
 O estudo de caso desenvolvido nesta atividade é o **Educação Continuada Gamificada**, apresentado em aula.
 
-A proposta consiste no desenvolvimento de uma aplicação relacionada à educação continuada, utilizando práticas de desenvolvimento orientadas a testes (TDD).
+A proposta consiste no desenvolvimento de uma aplicação relacionada à educação continuada, utilizando práticas de desenvolvimento orientadas a testes (TDD), uma API REST com Spring Boot, persistência em PostgreSQL e uma interface web em VueJS.
 
 ---
 
@@ -87,28 +87,69 @@ deveLiberarTresCursosExtrasParaAlunoDoPlanoBasicoComMediaMaiorOuIgualA7()
 
 ---
 
-## Ferramentas utilizadas
+# Tecnologias e ferramentas utilizadas
 
-Para a implementação do TDD foram utilizados:
-
-- **IntelliJ IDEA Ultimate**
-- **Spring Boot**
 - **Java 21**
+- **Spring Boot 4.1.1**
+- **Spring Web MVC**
+- **Spring Data JPA**
 - **Maven**
 - **JUnit 5**
 - **JaCoCo**
+- **H2**
+- **PostgreSQL 17**
+- **PGAdmin 4**
+- **Swagger / OpenAPI**
+- **VueJS**
+- **Node.js / npm**
+- **Docker**
+- **Docker Compose**
+- **Nginx**
 
 ---
 
-## Dependências do Spring Boot
+# Estrutura do projeto
 
-O projeto utiliza as dependências solicitadas para a atividade:
+A aplicação é composta por um backend em Spring Boot e um frontend em VueJS.
+
+```text
+ac1final/
+├── src/
+│   ├── main/
+│   │   ├── java/com/grupo7/ac1final/
+│   │   │   ├── Controller/AlunoController.java
+│   │   │   ├── Domain/Aluno.java
+│   │   │   ├── DTO/AlunoDTO.java
+│   │   │   ├── Entity/AlunoEntity.java
+│   │   │   ├── Repository/AlunoRepository.java
+│   │   │   └── Service/AlunoService.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       └── application-docker.properties
+│   └── test/
+│       └── java/com/grupo7/ac1final/DomainTest/AlunoTest.java
+├── frontend/
+│   ├── src/App.vue
+│   ├── Dockerfile
+│   └── package.json
+├── Dockerfile
+├── docker-compose.yml
+├── pom.xml
+└── README.md
+```
+
+---
+
+# Dependências do Spring Boot
+
+O projeto utiliza:
 
 - Spring Web
 - Spring Data JPA
-- Banco de dados H2
-- Banco de dados PostgreSQL
+- H2
+- PostgreSQL
 - PGAdmin para administração do banco via container
+- SpringDoc OpenAPI para Swagger
 - JaCoCo para análise da cobertura dos testes
 
 ---
@@ -117,7 +158,7 @@ O projeto utiliza as dependências solicitadas para a atividade:
 
 ## Domain
 
-Foi criado o pacote `Domain` dentro do projeto, contendo a classe correspondente ao domínio da aplicação:
+Foi criado o pacote `Domain` contendo:
 
 ```text
 src/main/java/com/grupo7/ac1final/Domain/Aluno.java
@@ -125,23 +166,19 @@ src/main/java/com/grupo7/ac1final/Domain/Aluno.java
 
 A classe `Aluno` representa o domínio do aluno e contém as regras de negócio relacionadas às User Stories.
 
----
-
 ## DomainTest
 
-Foi criado o pacote `DomainTest` para os testes da classe de domínio, seguindo a estrutura utilizada no exercício de calculadora realizado em aula.
+Foi criado o pacote `DomainTest`:
 
 ```text
 src/test/java/com/grupo7/ac1final/DomainTest/AlunoTest.java
 ```
 
----
-
 ## RED
 
-Na etapa **RED** do TDD, foram criados os testes referentes aos comportamentos esperados das User Stories antes da implementação completa das regras de negócio.
+Na etapa **RED**, foram criados os testes referentes aos comportamentos esperados antes da implementação completa das regras de negócio.
 
-Para a User Story escolhida (US 2), foram criados os seguintes testes:
+Para a US 2:
 
 ```java
 @Test
@@ -171,13 +208,9 @@ void deveReceberVoucherAoConcluir12Cursos() {
 
 Nesta etapa, os testes foram executados antes da implementação das regras necessárias, apresentando falhas.
 
----
-
 ## GREEN
 
-Na etapa **GREEN**, foram implementadas as regras necessárias para que os testes passassem.
-
-A regra principal da User Story foi implementada na classe `Aluno`:
+Na etapa **GREEN**, foram implementadas as regras necessárias:
 
 ```java
 if (cursosConcluidos >= 12) {
@@ -188,13 +221,11 @@ if (cursosConcluidos >= 12) {
 
 Após a implementação, os testes passaram com sucesso.
 
----
-
 ## BLUE
 
-Na etapa **BLUE**, todos os testes foram executados novamente e a cobertura do código foi analisada utilizando o **JaCoCo**.
+Na etapa **BLUE**, todos os testes foram executados novamente e a cobertura foi analisada com o **JaCoCo**.
 
-Resultado final dos testes:
+Resultado final:
 
 ```text
 Tests run: 8
@@ -205,7 +236,7 @@ Skipped: 0
 BUILD SUCCESS
 ```
 
-A cobertura obtida foi de **100%**, sem pontos em vermelho ou amarelo:
+Cobertura:
 
 - **Instructions:** 100%
 - **Branches:** 100%
@@ -213,4 +244,264 @@ A cobertura obtida foi de **100%**, sem pontos em vermelho ou amarelo:
 - **Methods:** 100%
 - **Classes:** 100%
 
-Com isso, a etapa BLUE foi concluída com todos os testes passando e cobertura de 100%.
+---
+
+# API REST
+
+O backend disponibiliza uma API REST para gerenciamento dos alunos.
+
+Base:
+
+```text
+http://localhost:8080/alunos
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| POST | `/alunos` | Cadastra um aluno |
+| GET | `/alunos` | Lista todos os alunos |
+| GET | `/alunos/{id}` | Busca um aluno pelo ID |
+| DELETE | `/alunos/{id}` | Exclui um aluno |
+| PUT | `/alunos/{id}/concluir-curso` | Registra a conclusão de um curso |
+| PUT | `/alunos/{id}/liberar-cursos` | Libera 3 cursos adicionais |
+| PUT | `/alunos/{id}/notificar` | Registra a notificação de mudança para PREMIUM |
+
+Ao atingir **12 cursos concluídos**, o endpoint de conclusão de curso atualiza o plano para `PREMIUM` e registra o voucher.
+
+---
+
+# Swagger / OpenAPI
+
+Swagger UI:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+Especificação OpenAPI:
+
+```text
+http://localhost:8080/v3/api-docs
+```
+
+O Swagger permite visualizar e testar os endpoints disponibilizados pela API.
+
+---
+
+# Banco de dados
+
+A aplicação utiliza **PostgreSQL** como banco de dados principal quando executada através do Docker.
+
+A tabela principal é:
+
+```text
+alunos
+```
+
+Ela armazena:
+
+- ID;
+- Plano;
+- Cursos concluídos;
+- Cursos adicionais permitidos;
+- Possui voucher;
+- Notificação de melhoria de plano.
+
+## PostgreSQL via Docker
+
+```text
+Container: ac1-postgres
+Database: ac1final
+Username: postgres
+Password: postgres
+Porta: 5432
+```
+
+Conexão utilizada pelo backend dentro da rede Docker:
+
+```text
+jdbc:postgresql://postgres:5432/ac1final
+```
+
+---
+
+# PGAdmin
+
+O PGAdmin é executado em um container separado.
+
+Acesso:
+
+```text
+http://localhost:5050
+```
+
+Credenciais:
+
+```text
+Email: admin@admin.com
+Senha: admin
+```
+
+Para conectar ao PostgreSQL pelo PGAdmin:
+
+```text
+Host: postgres
+Port: 5432
+Database: ac1final
+Username: postgres
+Password: postgres
+```
+
+A tabela pode ser encontrada em:
+
+```text
+Servers
+└── AC1 PostgreSQL
+    └── Databases
+        └── ac1final
+            └── Schemas
+                └── public
+                    └── Tables
+                        └── alunos
+```
+
+---
+
+# Frontend
+
+Foi desenvolvido um frontend utilizando **VueJS**.
+
+O frontend permite:
+
+- Listar alunos;
+- Cadastrar alunos;
+- Excluir alunos;
+- Registrar conclusão de curso;
+- Liberar 3 cursos adicionais;
+- Registrar a notificação de mudança de plano;
+- Visualizar plano;
+- Visualizar cursos concluídos;
+- Visualizar cursos adicionais;
+- Visualizar voucher;
+- Visualizar notificação.
+
+Acesso:
+
+```text
+http://localhost:5173
+```
+
+O frontend é servido pelo Nginx quando executado com Docker.
+
+---
+
+# Docker
+
+A aplicação foi preparada para execução utilizando **Docker Compose**, com quatro serviços:
+
+```text
+Frontend VueJS + Nginx  → localhost:5173
+Backend Spring Boot     → localhost:8080
+PostgreSQL              → localhost:5432
+PGAdmin                 → localhost:5050
+```
+
+## Serviços
+
+| Serviço | Container | Porta |
+|---|---|---:|
+| Frontend | `ac1-frontend` | 5173 |
+| Backend | `ac1-backend` | 8080 |
+| PostgreSQL | `ac1-postgres` | 5432 |
+| PGAdmin | `ac1-pgadmin` | 5050 |
+
+## Executando com Docker
+
+É necessário ter o **Docker Desktop** instalado e em execução.
+
+No diretório raiz:
+
+```powershell
+docker compose up --build
+```
+
+Para verificar os containers:
+
+```powershell
+docker compose ps
+```
+
+A execução validada apresentou:
+
+```text
+ac1-backend    Up
+ac1-frontend   Up
+ac1-pgadmin    Up
+ac1-postgres   Up (healthy)
+```
+
+## Parar os containers
+
+```powershell
+docker compose down
+```
+
+Para remover também o volume do PostgreSQL:
+
+```powershell
+docker compose down -v
+```
+
+---
+
+# Portas da aplicação
+
+| Componente | URL |
+|---|---|
+| Frontend VueJS | http://localhost:5173 |
+| API Spring Boot | http://localhost:8080/alunos |
+| Swagger UI | http://localhost:8080/swagger-ui/index.html |
+| OpenAPI | http://localhost:8080/v3/api-docs |
+| PGAdmin | http://localhost:5050 |
+| PostgreSQL | localhost:5432 |
+
+---
+
+# Fluxo principal da User Story 2
+
+```text
+Aluno inicia no plano BASICO
+          │
+          ▼
+Conclui cursos
+          │
+          ▼
+Cursos concluídos >= 12?
+       /       \
+     NÃO       SIM
+      │          │
+      │          ▼
+      │     Plano = PREMIUM
+      │          │
+      │          ▼
+      │     Voucher = TRUE
+      │
+      ▼
+Continua no fluxo normal
+```
+
+---
+
+# Validação final
+
+Foram realizadas validações dos principais componentes:
+
+- Testes automatizados com JUnit 5;
+- Cobertura de código com JaCoCo;
+- API REST com Spring Boot;
+- Swagger para documentação e testes dos endpoints;
+- Persistência utilizando PostgreSQL;
+- Administração do banco utilizando PGAdmin;
+- Interface web utilizando VueJS;
+- Execução integrada utilizando Docker Compose;
+- Verificação dos containers com `docker compose ps`.
